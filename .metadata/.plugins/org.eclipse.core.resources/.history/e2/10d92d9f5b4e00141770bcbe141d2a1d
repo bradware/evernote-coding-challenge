@@ -1,0 +1,82 @@
+package evernote;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+public class FrequencyAnalyzer {
+	
+	public static List<String> getFrequency(String file, int amount, char seperator) {
+		if(amount <= 0 || file.length() == 0) {
+			return new ArrayList<String>();
+		}
+		
+		ArrayList<String> frequencyList = FrequencyAnalyzer.calculateFrequencies(file, amount, seperator);
+		return frequencyList;
+	}
+
+	private static ArrayList<String> calculateFrequencies(String file, int amount, char seperator) {
+		final char[] stringList = file.toCharArray();
+		final Map<String, Integer> stringMap = new HashMap<String, Integer>();
+		final ArrayList<String> sortedWordList = new ArrayList<String>();
+		StringBuilder currString = new StringBuilder();
+		for(char c: stringList) {
+			if(c == seperator) {
+				if(currString.length() != 0) {
+					String str = currString.toString();
+					if(stringMap.containsKey(str)) {
+						int oldValue = stringMap.get(str);
+						stringMap.replace(str, ++oldValue);
+					} else {
+						stringMap.put(str, 1); //first time appearing in the file
+					}
+					currString.setLength(0);
+				}
+			} else {
+				currString.append(c);
+			}
+		}
+		
+		//To put the last string into the table
+		final String str = currString.toString();
+		if(stringMap.containsKey(str)) {
+			int oldValue = stringMap.get(str);
+			stringMap.replace(str, ++oldValue);
+		} else {
+			stringMap.put(str, 1); //first time appearing in the file
+		}
+		
+		int maxAppearances = 0;
+		final Map<Integer, ArrayList<String>> appearanceMap = new HashMap<Integer, ArrayList<String>>();
+		for(Entry<String, Integer> e: stringMap.entrySet()) {
+			int currValue = e.getValue();
+			String str = e.getKey();
+			if(appearanceMap.containsKey(currValue)) {
+				ArrayList<String> strList = appearanceMap.get(currValue);
+				strList.add(str);
+				appearanceMap.replace(currValue, strList);
+			} else {
+				ArrayList<String> newList = new ArrayList<String>();
+				newList.add(str);
+				appearanceMap.put(currValue, newList);
+			}
+			if(currValue > maxAppearances) {
+				maxAppearances = currValue;
+			}
+		}
+		int numItems = 0;
+		while(maxAppearances > 0 && numItems < amount) {
+			if(appearanceMap.containsKey(maxAppearances)) {
+				ArrayList<String> currList = appearanceMap.get(maxAppearances);
+				for(String str: currList) {
+					sortedWordList.add(str);
+					numItems++;
+				}
+			} 
+			maxAppearances--;
+		}
+		return sortedWordList;
+	}
+}

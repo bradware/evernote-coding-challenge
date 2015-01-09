@@ -1,0 +1,13 @@
+My solution obeys the O(n) constraint because of the use of a bi-directional HashMap. Even though the Java API does not have a bi-directional HashMap itself, it was not difficult to implement my own and use it to find the solution. In the first part of my algorithm, I loop through each character in the string passed in as a parameter, and store each separate string in a HashMap. I also replace each word and update the amount of times it has appeared in the complete string. This total operation takes O(n) time.
+
+After that, I loop through each entry in the HashMap, and store it in a separate HashMap switching the key-value pairs, so that now the number of appearances is the key, and an array list of words is the value. Each of the words in the array list occurred the same amount of times in the string. This operation in takes O(n), assuming in the worst case that there are the same amount of distinct words as characters in the string.
+
+Finally, I start at the highest frequency of appearances for a word, and index in the HashMap to add each of the words in the array list to the final list that I am returning. Technically this iteration runs O(f), where f is the highest amount of frequency for a word. However, if we analyze f at it’s highest value, we will find that f is always less than or equal to n. That’s because in the worst-case, my algorithm is given a file with every word being the exact same and then split by the specified separator. 
+
+Total, my algorithm runs:
+
+O(n) + O(n) + O(f)
+
+where f <= n. 
+
+This is simply just O(n).
