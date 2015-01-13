@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 /**
  * Class for analyzing the amount of strings in a file.
+ * Completed for a coding challenge by Evernote. 
  *
  * @author Brad Ware
  */
